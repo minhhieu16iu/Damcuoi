@@ -12,6 +12,10 @@
       font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    html, body {
+      scroll-behavior: smooth;
+    }
+
     body {
       background: #f9f4f1;
       color: #333;
@@ -24,7 +28,7 @@
 
     /* HERO / HEADER */
     .hero {
-      min-height: 70vh;
+      min-height: 80vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -32,13 +36,23 @@
       padding: 40px 16px 30px;
       background-image: linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0.3),
+          rgba(0, 0, 0, 0.25),
           rgba(0, 0, 0, 0.6)
         ),
         url("https://images.pexels.com/photos/3951845/pexels-photo-3951845.jpeg?auto=compress&cs=tinysrgb&w=1600");
       background-size: cover;
-      background-position: center;
+      background-position: center center;
+      /* hiệu ứng parallax đơn giản */
+      background-attachment: fixed;
       color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      /* iOS thường không hỗ trợ background-attachment: fixed,
+         nên ta bỏ để tránh giật lag */
+      .hero {
+        background-attachment: scroll;
+      }
     }
 
     .hero-inner {
@@ -137,7 +151,7 @@
       margin-bottom: 24px;
     }
 
-    /* VIDEO CARD (thay cho slider ảnh) */
+    /* VIDEO CARD */
     .video-card {
       background: #fff;
       border-radius: 24px;
@@ -150,7 +164,7 @@
       overflow: hidden;
       background: #000;
       position: relative;
-      /* 16:9 */
+      /* tỉ lệ 16:9 */
       padding-top: 56.25%;
     }
 
@@ -240,7 +254,8 @@
       <div class="hero-subtitle">WEDDING DAY</div>
       <div class="hero-names">Minh Hiếu &amp; Thùy Linh</div>
       <div class="hero-and">Trân trọng kính mời</div>
-      <div class="hero-date">21 · 12 · 2025 · TP. Hồ Chí Minh</div>
+      <!-- chỉnh lại địa điểm Đồng Nai -->
+      <div class="hero-date">21 · 12 · 2025 · Đồng Nai</div>
       <p class="hero-note">
         Cùng nhìn lại những khoảnh khắc đẹp nhất trong hành trình của chúng ta.
       </p>
@@ -251,7 +266,7 @@
     </div>
   </header>
 
-  <!-- VIDEO CƯỚI (ĐOẠN BẠN CHỤP MÀN HÌNH) -->
+  <!-- VIDEO CƯỚI -->
   <section id="video">
     <h2 class="section-title">Video cưới</h2>
     <p class="section-subtitle">
@@ -260,9 +275,11 @@
 
     <div class="video-card">
       <div class="video-frame">
-        <!-- EMBED Google Drive: dùng /preview với ID bạn đưa -->
+        <!-- ban đầu để src rỗng, chỉ load khi cuộn tới -->
         <iframe
-          src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview"
+          id="weddingVideo"
+          src=""
+          data-src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview"
           allow="autoplay; encrypted-media"
           allowfullscreen
         ></iframe>
@@ -278,13 +295,13 @@
     <div class="map-card">
       <div class="map-title">Vị trí tiệc cưới</div>
       <div class="map-address">
-        Đường đi được lấy theo vị trí bạn cung cấp trên Google Maps:<br />
-        <strong>https://maps.app.goo.gl/SCt9a4SLBGg6d52C9</strong>
+        Đường đi được lấy theo vị trí bạn cung cấp trên Google Maps (Đồng Nai):<br />
+        <strong>10.7040589, 106.8557651</strong>
       </div>
       <div class="map-wrapper">
-        <!-- Dùng toạ độ khách sạn Phú Thạnh -->
+        <!-- dùng đúng link map bạn gửi -->
         <iframe
-          src="https://www.google.com/maps?q=10.7042253,106.8481923&hl=vi&z=16&output=embed"
+          src="https://www.google.com/maps?q=10.704058932954574,106.8557651188977&z=14&t=m&mapclient=embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen
@@ -299,5 +316,43 @@
   <footer>
     &copy; 2025 Wedding · Minh Hiếu &amp; Thùy Linh · Hẹn gặp mọi người trong ngày vui của chúng mình ♥
   </footer>
+
+  <script>
+    // Khi cuộn tới đoạn video thì tự load link Drive (kèm autoplay=1&mute=1)
+    document.addEventListener("DOMContentLoaded", function () {
+      const videoSection = document.getElementById("video");
+      const iframe = document.getElementById("weddingVideo");
+      if (!videoSection || !iframe) return;
+
+      const loadVideo = () => {
+        if (iframe.src) return; // đã load rồi
+        const base = iframe.dataset.src || "";
+        if (!base) return;
+        // thêm autoplay + mute (một số trình duyệt vẫn có thể yêu cầu bấm play)
+        const url = base.includes("?")
+          ? base + "&autoplay=1&mute=1"
+          : base + "?autoplay=1&mute=1";
+        iframe.src = url;
+      };
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                loadVideo();
+                obs.disconnect();
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+        observer.observe(videoSection);
+      } else {
+        // trình duyệt cũ: load luôn
+        loadVideo();
+      }
+    });
+  </script>
 </body>
 </html>
