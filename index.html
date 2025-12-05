@@ -26,25 +26,25 @@
       color: inherit;
     }
 
-    /* ================= FALLING PHOTOS (NỀN CHUNG) ================= */
+    /* ================= FALLING PHOTOS (NỀN) ================= */
     .falling-photos {
       position: fixed;
       inset: 0;
-      pointer-events: none;       /* không che nút bấm */
-      z-index: 0;                 /* dưới nội dung */
+      pointer-events: none;
+      z-index: 0;
       overflow: hidden;
     }
 
     .fall-photo {
       position: absolute;
-      top: -30vh;                 /* xuất phát trên mép trên */
-      width: 110px;
-      height: 150px;
-      border-radius: 18px;
+      top: -35vh;
+      width: 150px;
+      height: 210px;
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
       opacity: 0;
-      animation: fall 14s linear infinite;
+      animation: fall 16s linear infinite;
     }
 
     .fall-photo img {
@@ -54,12 +54,13 @@
       display: block;
     }
 
-    /* đặt vị trí & delay khác nhau */
-    .f1 { left: 10%; animation-delay: 0s; }
-    .f2 { left: 30%; animation-delay: 3s; }
-    .f3 { left: 55%; animation-delay: 6s; }
-    .f4 { left: 75%; animation-delay: 9s; }
-    .f5 { left: 45%; animation-delay: 12s; }
+    /* vị trí & delay – dày hơn, sát nhau hơn */
+    .f1 { left: 2%;   animation-delay: 0s; }
+    .f2 { left: 20%;  animation-delay: 3s; }
+    .f3 { left: 38%;  animation-delay: 6s; }
+    .f4 { left: 56%;  animation-delay: 9s; }
+    .f5 { left: 74%;  animation-delay: 12s; }
+    .f6 { left: 88%;  animation-delay: 15s; }
 
     @keyframes fall {
       0% {
@@ -71,18 +72,19 @@
       }
       90% {
         opacity: 1;
-        transform: translateY(120vh) rotate(8deg);
+        transform: translateY(125vh) rotate(8deg);
       }
       100% {
         opacity: 0;
-        transform: translateY(130vh) rotate(8deg);
+        transform: translateY(135vh) rotate(8deg);
       }
     }
 
     @media (max-width: 600px) {
       .fall-photo {
-        width: 80px;
-        height: 110px;
+        width: 110px;
+        height: 155px;
+        border-radius: 18px;
       }
     }
 
@@ -105,7 +107,7 @@
       background-position: center center;
       color: #fff;
       overflow: hidden;
-      z-index: 1; /* nằm trên lớp ảnh rơi */
+      z-index: 1;
     }
 
     .hero-inner {
@@ -179,7 +181,7 @@
       margin: 0 auto;
       padding: 32px 16px 40px;
       position: relative;
-      z-index: 1; /* trên lớp ảnh rơi */
+      z-index: 1;
     }
 
     .section-title {
@@ -206,7 +208,7 @@
       margin-bottom: 24px;
     }
 
-    /* ================= VIDEO CARD ================= */
+    /* ================= VIDEO ================= */
     .video-card {
       background: #fff;
       border-radius: 24px;
@@ -219,7 +221,7 @@
       overflow: hidden;
       background: #f5f2dc;
       position: relative;
-      padding-top: 56.25%; /* 16:9 */
+      padding-top: 56.25%;
     }
 
     .video-frame iframe {
@@ -237,7 +239,7 @@
       color: #666;
     }
 
-    /* ================= MAP SECTION ================= */
+    /* ================= MAP ================= */
     .map-section {
       max-width: 900px;
       margin: 0 auto 40px;
@@ -306,9 +308,9 @@
   </style>
 </head>
 <body>
-  <!-- LỚP ẢNH RƠI NỀN TOÀN TRANG -->
+  <!-- LỚP ẢNH RƠI NỀN -->
   <div class="falling-photos">
-    <!-- 5 hình mẫu, sau này bạn đổi src thành hình thật -->
+    <!-- sau này bạn đổi src thành ảnh cưới thật -->
     <div class="fall-photo f1">
       <img src="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=800" alt="">
     </div>
@@ -323,6 +325,9 @@
     </div>
     <div class="fall-photo f5">
       <img src="https://images.pexels.com/photos/2747595/pexels-photo-2747595.jpeg?auto=compress&cs=tinysrgb&w=800" alt="">
+    </div>
+    <div class="fall-photo f6">
+      <img src="https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=800" alt="">
     </div>
   </div>
 
@@ -343,7 +348,7 @@
     </div>
   </header>
 
-  <!-- VIDEO CƯỚI -->
+  <!-- VIDEO -->
   <section id="video">
     <h2 class="section-title">Video cưới</h2>
     <p class="section-subtitle">
@@ -364,7 +369,7 @@
     </div>
   </section>
 
-  <!-- BẢN ĐỒ -->
+  <!-- MAP -->
   <section id="map" class="map-section">
     <div class="map-card">
       <div class="map-title">Vị trí tiệc cưới</div>
