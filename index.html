@@ -175,13 +175,14 @@
       color: #666;
     }
 
-    /* FLOATING PHOTOS */
+    /* FLOATING PHOTOS – RƠI TỪ TRÊN XUỐNG */
     .photo-strip {
       margin-top: 28px;
       background: #faf7d2;
       border-radius: 24px;
       padding: 30px 10px 40px;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
     }
 
     .photo-strip-title {
@@ -197,7 +198,6 @@
       height: 520px;
       max-width: 600px;
       margin: 0 auto;
-      overflow: visible;
     }
 
     .float-photo {
@@ -207,9 +207,11 @@
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
-      transform-origin: center center;
       background: #fff;
-      transition: transform 0.2s ease-out;
+      opacity: 0;
+      transform: translateY(-120vh) rotate(var(--base-rot));
+      animation: drop 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      animation-delay: var(--delay, 0s);
     }
 
     .float-photo img {
@@ -219,23 +221,35 @@
       display: block;
     }
 
-    /* Vị trí & góc xoay ban đầu */
+    /* Vị trí cuối cùng (sau khi rơi xong) */
     .float-photo.p1 {
       left: 6%;
       top: 0;
-      transform: rotate(-10deg);
     }
 
     .float-photo.p2 {
       right: 6%;
       top: 170px;
-      transform: rotate(8deg);
     }
 
     .float-photo.p3 {
       left: 14%;
       bottom: 0;
-      transform: rotate(-5deg);
+    }
+
+    @keyframes drop {
+      0% {
+        opacity: 0;
+        transform: translateY(-120vh) rotate(var(--base-rot));
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(10px) rotate(var(--base-rot));
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(var(--base-rot));
+      }
     }
 
     /* MAP SECTION */
@@ -346,18 +360,18 @@
       </p>
     </div>
 
-    <!-- DẢI ẢNH CHẠY NỀN -->
+    <!-- DẢI ẢNH RƠI TỪ ĐẦU TRANG XUỐNG -->
     <div class="photo-strip">
       <div class="photo-strip-title">Khoảnh khắc của chúng mình</div>
       <div class="photo-strip-inner">
         <!-- 3 HÌNH MẪU – SAU NÀY BẠN CHỈ VIỆC THAY SRC -->
-        <div class="float-photo p1" data-rotate="-10">
+        <div class="float-photo p1" style="--base-rot:-10deg; --delay:0s;">
           <img src="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 1" />
         </div>
-        <div class="float-photo p2" data-rotate="8">
+        <div class="float-photo p2" style="--base-rot:8deg; --delay:0.25s;">
           <img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 2" />
         </div>
-        <div class="float-photo p3" data-rotate="-5">
+        <div class="float-photo p3" style="--base-rot:-5deg; --delay:0.5s;">
           <img src="https://images.pexels.com/photos/2472871/pexels-photo-2472871.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 3" />
         </div>
       </div>
@@ -389,32 +403,5 @@
   <footer>
     &copy; 2025 Wedding · Minh Hiếu &amp; Thùy Linh · Hẹn gặp mọi người trong ngày vui của chúng mình ♥
   </footer>
-
-  <script>
-    // Parallax nhẹ cho hero + dải ảnh
-    (function () {
-      const hero = document.querySelector(".hero");
-      const floats = document.querySelectorAll(".float-photo");
-
-      function onScroll() {
-        const offset = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (hero) {
-          hero.style.backgroundPosition = "center " + (-offset * 0.4) + "px";
-        }
-
-        floats.forEach((el, index) => {
-          const baseRotate = parseFloat(el.dataset.rotate || "0");
-          const speed = 0.08 + index * 0.04;
-          const translateY = offset * speed * 0.12;
-          el.style.transform =
-            "translateY(" + translateY + "px) rotate(" + baseRotate + "deg)";
-        });
-      }
-
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
-    })();
-  </script>
 </body>
 </html>
