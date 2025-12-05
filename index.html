@@ -28,6 +28,7 @@
 
     /* HERO / HEADER */
     .hero {
+      position: relative;
       min-height: 80vh;
       display: flex;
       align-items: center;
@@ -42,14 +43,12 @@
         url("https://images.pexels.com/photos/3951845/pexels-photo-3951845.jpeg?auto=compress&cs=tinysrgb&w=1600");
       background-size: cover;
       background-position: center center;
-      /* hiệu ứng parallax đơn giản */
-      background-attachment: fixed;
       color: #fff;
+      overflow: hidden;
     }
 
+    /* để background “chạy” mượt hơn trên desktop */
     @media (max-width: 768px) {
-      /* iOS thường không hỗ trợ background-attachment: fixed,
-         nên ta bỏ để tránh giật lag */
       .hero {
         background-attachment: scroll;
       }
@@ -254,7 +253,7 @@
       <div class="hero-subtitle">WEDDING DAY</div>
       <div class="hero-names">Minh Hiếu &amp; Thùy Linh</div>
       <div class="hero-and">Trân trọng kính mời</div>
-      <!-- chỉnh lại địa điểm Đồng Nai -->
+      <!-- Đồng Nai -->
       <div class="hero-date">21 · 12 · 2025 · Đồng Nai</div>
       <p class="hero-note">
         Cùng nhìn lại những khoảnh khắc đẹp nhất trong hành trình của chúng ta.
@@ -275,11 +274,10 @@
 
     <div class="video-card">
       <div class="video-frame">
-        <!-- ban đầu để src rỗng, chỉ load khi cuộn tới -->
+        <!-- GẮN THẲNG LINK DRIVE PREVIEW -->
         <iframe
           id="weddingVideo"
-          src=""
-          data-src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview"
+          src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview?autoplay=1&mute=1"
           allow="autoplay; encrypted-media"
           allowfullscreen
         ></iframe>
@@ -299,9 +297,9 @@
         <strong>10.7040589, 106.8557651</strong>
       </div>
       <div class="map-wrapper">
-        <!-- dùng đúng link map bạn gửi -->
+        <!-- Dùng URL embed chuẩn -->
         <iframe
-          src="https://www.google.com/maps?q=10.704058932954574,106.8557651188977&z=14&t=m&mapclient=embed"
+          src="https://maps.google.com/maps?q=10.704058932954574,106.8557651188977&z=14&t=m&output=embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen
@@ -318,41 +316,19 @@
   </footer>
 
   <script>
-    // Khi cuộn tới đoạn video thì tự load link Drive (kèm autoplay=1&mute=1)
-    document.addEventListener("DOMContentLoaded", function () {
-      const videoSection = document.getElementById("video");
-      const iframe = document.getElementById("weddingVideo");
-      if (!videoSection || !iframe) return;
+    // Parallax nhẹ cho background hero
+    (function () {
+      const hero = document.querySelector(".hero");
+      if (!hero) return;
 
-      const loadVideo = () => {
-        if (iframe.src) return; // đã load rồi
-        const base = iframe.dataset.src || "";
-        if (!base) return;
-        // thêm autoplay + mute (một số trình duyệt vẫn có thể yêu cầu bấm play)
-        const url = base.includes("?")
-          ? base + "&autoplay=1&mute=1"
-          : base + "?autoplay=1&mute=1";
-        iframe.src = url;
-      };
-
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                loadVideo();
-                obs.disconnect();
-              }
-            });
-          },
-          { threshold: 0.5 }
-        );
-        observer.observe(videoSection);
-      } else {
-        // trình duyệt cũ: load luôn
-        loadVideo();
+      function onScroll() {
+        const offset = window.pageYOffset || document.documentElement.scrollTop;
+        // hệ số 0.4 cho chuyển động nhẹ nhàng
+        hero.style.backgroundPosition = "center " + (-offset * 0.4) + "px";
       }
-    });
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+    })();
   </script>
 </body>
 </html>
