@@ -47,13 +47,7 @@
       overflow: hidden;
     }
 
-    /* để background “chạy” mượt hơn trên desktop */
-    @media (max-width: 768px) {
-      .hero {
-        background-attachment: scroll;
-      }
-    }
-
+    /* iOS thường không hỗ trợ fixed, nên mình dùng JS parallax, không cần background-attachment */
     .hero-inner {
       max-width: 540px;
       padding: 18px 24px 22px;
@@ -269,15 +263,14 @@
   <section id="video">
     <h2 class="section-title">Video cưới</h2>
     <p class="section-subtitle">
-      Video đám cưới được trình chiếu trực tiếp ngay tại đây.
+      Video đám cưới được trình chiếu trực tiếp ngay tại đây (bấm Play để xem).
     </p>
 
     <div class="video-card">
       <div class="video-frame">
-        <!-- GẮN THẲNG LINK DRIVE PREVIEW -->
+        <!-- Preview Google Drive: người xem tự bấm Play -->
         <iframe
-          id="weddingVideo"
-          src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview?autoplay=1&mute=1"
+          src="https://drive.google.com/file/d/1fMGqhdo4iwV_w1Lj3joPQOFvBBcBkDn4/preview"
           allow="autoplay; encrypted-media"
           allowfullscreen
         ></iframe>
@@ -297,7 +290,7 @@
         <strong>10.7040589, 106.8557651</strong>
       </div>
       <div class="map-wrapper">
-        <!-- Dùng URL embed chuẩn -->
+        <!-- URL embed chuẩn từ tọa độ bạn gửi -->
         <iframe
           src="https://maps.google.com/maps?q=10.704058932954574,106.8557651188977&z=14&t=m&output=embed"
           loading="lazy"
@@ -316,14 +309,13 @@
   </footer>
 
   <script>
-    // Parallax nhẹ cho background hero
+    // Parallax nhẹ cho background hero: hình chạy xuống khi cuộn
     (function () {
       const hero = document.querySelector(".hero");
       if (!hero) return;
 
       function onScroll() {
         const offset = window.pageYOffset || document.documentElement.scrollTop;
-        // hệ số 0.4 cho chuyển động nhẹ nhàng
         hero.style.backgroundPosition = "center " + (-offset * 0.4) + "px";
       }
 
