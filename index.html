@@ -47,7 +47,6 @@
       overflow: hidden;
     }
 
-    /* iOS thường không hỗ trợ fixed, nên mình dùng JS parallax, không cần background-attachment */
     .hero-inner {
       max-width: 540px;
       padding: 18px 24px 22px;
@@ -176,6 +175,68 @@
       color: #666;
     }
 
+    /* FLOATING PHOTOS (như background chạy ảnh) */
+    .photo-strip {
+      margin-top: 28px;
+      background: #f7f4cf;
+      border-radius: 24px;
+      padding: 30px 10px 40px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.05);
+    }
+
+    .photo-strip-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: #555;
+    }
+
+    .photo-strip-inner {
+      position: relative;
+      height: 430px;
+      max-width: 600px;
+      margin: 0 auto;
+      overflow: visible;
+    }
+
+    .float-photo {
+      position: absolute;
+      width: 60%;
+      max-width: 260px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+      transform-origin: center center;
+      background: #fff;
+    }
+
+    .float-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Vị trí & góc xoay ban đầu */
+    .float-photo.p1 {
+      left: 4%;
+      top: 0;
+      transform: rotate(-8deg);
+    }
+
+    .float-photo.p2 {
+      right: 4%;
+      top: 120px;
+      transform: rotate(7deg);
+    }
+
+    .float-photo.p3 {
+      left: 12%;
+      bottom: 0;
+      transform: rotate(-4deg);
+    }
+
     /* MAP SECTION */
     .map-section {
       max-width: 900px;
@@ -238,6 +299,12 @@
         height: 340px;
       }
     }
+
+    @media (max-width: 480px) {
+      .photo-strip-inner {
+        height: 360px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -279,6 +346,23 @@
         Video đám cưới của Minh Hiếu &amp; Thùy Linh.
       </p>
     </div>
+
+    <!-- DẢI ẢNH CHẠY NỀN GIỐNG LINK MẪU -->
+    <div class="photo-strip">
+      <div class="photo-strip-title">Khoảnh khắc của chúng mình</div>
+      <div class="photo-strip-inner">
+        <!-- THAY 3 LINK ẢNH NÀY THÀNH ẢNH CƯỚI THẬT CỦA BẠN NẾU MUỐN -->
+        <div class="float-photo p1" data-rotate="-8">
+          <img src="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 1" />
+        </div>
+        <div class="float-photo p2" data-rotate="7">
+          <img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 2" />
+        </div>
+        <div class="float-photo p3" data-rotate="-4">
+          <img src="https://images.pexels.com/photos/2472871/pexels-photo-2472871.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ảnh cưới 3" />
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- MAP SECTION -->
@@ -309,17 +393,31 @@
   </footer>
 
   <script>
-    // Parallax nhẹ cho background hero: hình chạy xuống khi cuộn
+    // Parallax nhẹ cho background hero + dải ảnh
     (function () {
       const hero = document.querySelector(".hero");
-      if (!hero) return;
+      const floats = document.querySelectorAll(".float-photo");
 
       function onScroll() {
         const offset = window.pageYOffset || document.documentElement.scrollTop;
-        hero.style.backgroundPosition = "center " + (-offset * 0.4) + "px";
+
+        // background hero
+        if (hero) {
+          hero.style.backgroundPosition = "center " + (-offset * 0.4) + "px";
+        }
+
+        // các tấm ảnh nghiêng chạy theo cuộn
+        floats.forEach((el, index) => {
+          const baseRotate = parseFloat(el.dataset.rotate || "0");
+          const speed = 0.15 + index * 0.08; // mỗi tấm chạy tốc độ khác nhau
+          const translateY = offset * speed * 0.1;
+          el.style.transform =
+            "translateY(" + translateY + "px) rotate(" + baseRotate + "deg)";
+        });
       }
 
       window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
     })();
   </script>
 </body>
